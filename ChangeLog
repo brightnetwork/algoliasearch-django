@@ -1,6 +1,9 @@
 
 CHANGELOG
 
+2020-11-19 2.0.5
+  * [CHANGE] Expand test matrix to Python 3.9 and Django 3.2 (#14)
+
 2020-11-19 2.0.4
   * [CHANGE] Update REGISTER log level: info -> debug (#13) 
 
