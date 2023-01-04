@@ -1,5 +1,5 @@
 import time
-from mock import patch, call, ANY
+from unittest.mock import patch, call, ANY
 
 from django.test import TestCase, override_settings
 

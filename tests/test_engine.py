@@ -45,7 +45,7 @@ class EngineTestCase(TestCase):
 
     def test_get_adapter(self):
         self.engine.register(Website)
-        self.assertEquals(AlgoliaIndex,
+        self.assertEqual(AlgoliaIndex,
                           self.engine.get_adapter(Website).__class__)
 
     def test_get_adapter_exception(self):
@@ -55,7 +55,7 @@ class EngineTestCase(TestCase):
     def test_get_adapter_from_instance(self):
         self.engine.register(Website)
         instance = Website()
-        self.assertEquals(
+        self.assertEqual(
             AlgoliaIndex,
             self.engine.get_adapter_from_instance(instance).__class__)
 
@@ -81,7 +81,7 @@ class EngineTestCase(TestCase):
                          self.engine.get_adapter(Website).__class__.__name__)
 
     def test_register_with_custom_index_exception(self):
-        class WebsiteIndex(object):
+        class WebsiteIndex:
             pass
 
         # WebsiteIndex is not a subclass of AlgoliaIndex
