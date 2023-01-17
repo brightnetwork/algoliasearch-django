@@ -1,4 +1,4 @@
-django>=1.7
+django>=3.2
 algoliasearch>=2.0,<3.0
 # dev dependencies
 pypandoc
@@ -6,4 +6,4 @@ wheel
 tox
 twine
 factory_boy
-mock
+

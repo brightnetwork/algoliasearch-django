@@ -1,4 +1,4 @@
-from mock import patch, call, Mock, MagicMock
+from unittest.mock import patch, call, Mock, MagicMock
 from io import StringIO
 
 from django.test import TestCase

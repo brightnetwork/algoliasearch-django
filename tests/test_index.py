@@ -1,5 +1,4 @@
-# coding=utf-8
-from mock import patch, call, MagicMock
+from unittest.mock import patch, call, MagicMock
 
 from django.conf import settings
 from django.test import TestCase
@@ -48,7 +47,7 @@ class IndexTestCase(TestCase):
         try:
             self.assertRegex(index.index_name, regex)
         except AttributeError:
-            self.assertRegexpMatches(index.index_name, regex)
+            self.assertRegex(index.index_name, regex)
 
     def test_custom_index_name(self):
         class WebsiteIndex(AlgoliaIndex):
@@ -59,7 +58,7 @@ class IndexTestCase(TestCase):
         try:
             self.assertRegex(index.index_name, regex)
         except AttributeError:
-            self.assertRegexpMatches(index.index_name, regex)
+            self.assertRegex(index.index_name, regex)
 
     def test_index_model_with_foreign_key_reference(self):
         index = AlgoliaIndex(User, self.client, settings.ALGOLIA)
@@ -76,7 +75,7 @@ class IndexTestCase(TestCase):
             try:
                 self.assertRegex(index.index_name, regex)
             except AttributeError:
-                self.assertRegexpMatches(index.index_name, regex)
+                self.assertRegex(index.index_name, regex)
 
     def test_tmp_index_name(self):
         """Test that the temporary index name should respect suffix and prefix settings"""
