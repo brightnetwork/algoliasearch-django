@@ -1,11 +1,14 @@
 
 CHANGELOG
 
-2020-11-19 2.0.6
+2023-03-13 3.0.0
+  * [CHANGE] Update to algoliasearch-client-python v3
+
+2022-01-31 2.0.6
   * [CHANGE] Expand test matrix to Python 3.10 and Django 4.0 (#15)
   * [CHANGE] Remove EOL Python and Django versions (#15)
 
-2020-11-19 2.0.5
+2021-04-13 2.0.5
   * [CHANGE] Expand test matrix to Python 3.9 and Django 3.2 (#14)
 
 2020-11-19 2.0.4
