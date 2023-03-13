@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import sys
 
 from setuptools import setup
 from setuptools import find_packages
@@ -24,7 +23,7 @@ setup(
     version=VERSION,
     license='MIT License',
     packages=find_packages(exclude=['tests']),
-    install_requires=['django>=3.2', 'algoliasearch>=2.0,<3.0'],
+    install_requires=['django>=3.2', 'algoliasearch>=3.0,<4.0'],
     description='Algolia Search integration for Django',
     long_description=README,
     long_description_content_type="text/markdown",
