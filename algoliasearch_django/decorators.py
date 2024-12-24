@@ -1,5 +1,5 @@
 from contextlib import ContextDecorator
-from functools import WRAPPER_ASSIGNMENTS, wraps
+from functools import WRAPPER_ASSIGNMENTS
 
 from django.db.models.signals import post_save, pre_delete
 
@@ -28,11 +28,12 @@ def register(model):
 
     def _algolia_engine_wrapper(index_class):
         if not issubclass(index_class, AlgoliaIndex):
-            raise ValueError('Wrapped class must subclass AlgoliaIndex.')
+            raise ValueError("Wrapped class must subclass AlgoliaIndex.")
 
         register(model, index_class)
 
         return index_class
+
     return _algolia_engine_wrapper
 
 
@@ -52,26 +53,26 @@ class disable_auto_indexing(ContextDecorator):
         if model is not None:
             self.models = [model]
         else:
-            self.models = algolia_engine._AlgoliaEngine__registered_models
+            self.models = algolia_engine._AlgoliaEngine__registered_models  # pyright: ignore
 
     def __enter__(self):
         for model in self.models:
             post_save.disconnect(
-                algolia_engine._AlgoliaEngine__post_save_receiver,
-                sender=model
+                algolia_engine._AlgoliaEngine__post_save_receiver,  # pyright: ignore
+                sender=model,
             )
             pre_delete.disconnect(
-                algolia_engine._AlgoliaEngine__pre_delete_receiver,
-                sender=model
+                algolia_engine._AlgoliaEngine__pre_delete_receiver,  # pyright: ignore
+                sender=model,
             )
 
     def __exit__(self, exc_type, exc_value, traceback):
         for model in self.models:
             post_save.connect(
-                algolia_engine._AlgoliaEngine__post_save_receiver,
-                sender=model
+                algolia_engine._AlgoliaEngine__post_save_receiver,  # pyright: ignore
+                sender=model,
             )
             pre_delete.connect(
-                algolia_engine._AlgoliaEngine__pre_delete_receiver,
-                sender=model
+                algolia_engine._AlgoliaEngine__pre_delete_receiver,  # pyright: ignore
+                sender=model,
             )

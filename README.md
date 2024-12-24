@@ -12,7 +12,6 @@
   </p>
 </p>
 
-
 <p align="center">
   <a href="https://www.algolia.com/doc/framework-integration/django/options/?language=python" target="_blank">Documentation</a>  •
   <a href="https://discourse.algolia.com" target="_blank">Community Forum</a>  •
@@ -26,49 +25,50 @@
 
 You can find the full reference on [Algolia's website](https://www.algolia.com/doc/framework-integration/django/).
 
-
-
 1. **[Setup](#setup)**
-    * [Introduction](#introduction)
-    * [Install](#install)
-    * [Setup](#setup)
-    * [Quick Start](#quick-start)
+
+   - [Introduction](#introduction)
+   - [Install](#install)
+   - [Setup](#setup)
+   - [Quick Start](#quick-start)
 
 1. **[Commands](#commands)**
-    * [Commands](#commands)
+
+   - [Commands](#commands)
 
 1. **[Search](#search)**
-    * [Search](#search)
+
+   - [Search](#search)
 
 1. **[Geo-Search](#geo-search)**
-    * [Geo-Search](#geo-search)
+
+   - [Geo-Search](#geo-search)
 
 1. **[Tags](#tags)**
-    * [Tags](#tags)
+
+   - [Tags](#tags)
 
 1. **[Options](#options)**
-    * [Custom <code>objectID</code>](#custom-codeobjectidcode)
-    * [Custom index name](#custom-index-name)
-    * [Field Preprocessing and Related objects](#field-preprocessing-and-related-objects)
-    * [Index settings](#index-settings)
-    * [Restrict indexing to a subset of your data](#restrict-indexing-to-a-subset-of-your-data)
-    * [Multiple indices per model](#multiple-indices-per-model)
-    * [Temporarily disable the auto-indexing](#temporarily-disable-the-auto-indexing)
+
+   - [Custom <code>objectID</code>](#custom-codeobjectidcode)
+   - [Custom index name](#custom-index-name)
+   - [Field Preprocessing and Related objects](#field-preprocessing-and-related-objects)
+   - [Index settings](#index-settings)
+   - [Restrict indexing to a subset of your data](#restrict-indexing-to-a-subset-of-your-data)
+   - [Multiple indices per model](#multiple-indices-per-model)
+   - [Temporarily disable the auto-indexing](#temporarily-disable-the-auto-indexing)
 
 1. **[Aggregators](#aggregators)**
     * [Aggregators](#aggregators)
 
 1. **[Tests](#tests)**
-    * [Run Tests](#run-tests)
+
+   - [Run Tests](#run-tests)
 
 1. **[Troubleshooting](#troubleshooting)**
-    * [Frequently asked questions](#frequently-asked-questions)
-
-
+   - [Frequently asked questions](#frequently-asked-questions)
 
 # Setup
-
-
 
 ## Introduction
 
@@ -76,7 +76,8 @@ This package lets you easily integrate the Algolia Search API to your [Django](h
 
 You might be interested in this sample Django application providing a typeahead.js based auto-completion and Google-like instant search: [algoliasearch-django-example](https://github.com/algolia/algoliasearch-django-example)
 
-Compatible with **Python 3.5+** and **Django 2.2+**
+- Compatible with **Python 3.8+**.
+- Supports **Django 4.x** and **5.x**.
 
 ## Install
 
@@ -97,10 +98,10 @@ ALGOLIA = {
 
 There are several optional settings:
 
-* `INDEX_PREFIX`: prefix all indices. Use it to separate different applications, like `site1_Products` and `site2_Products`.
-* `INDEX_SUFFIX`: suffix all indices. Use it to differentiate development and production environments, like `Location_dev` and `Location_prod`.
-* `AUTO_INDEXING`: automatically synchronize the models with Algolia (default to **True**).
-* `RAISE_EXCEPTIONS`: raise exceptions on network errors instead of logging them (default to **settings.DEBUG**).
+- `INDEX_PREFIX`: prefix all indices. Use it to separate different applications, like `site1_Products` and `site2_Products`.
+- `INDEX_SUFFIX`: suffix all indices. Use it to differentiate development and production environments, like `Location_dev` and `Location_prod`.
+- `AUTO_INDEXING`: automatically synchronize the models with Algolia (default to **True**).
+- `RAISE_EXCEPTIONS`: raise exceptions on network errors instead of logging them (default to **settings.DEBUG**).
 
 ## Quick Start
 
@@ -140,10 +141,10 @@ class YourModelIndex(AlgoliaIndex):
 
 ## Commands
 
--   `python manage.py algolia_reindex`: reindex all the registered models. This command will first send all the record to a temporary index and then moves it.
-    -   you can pass `--index` parameter to reindex a given index
--   `python manage.py algolia_applysettings`: (re)apply the index settings.
--   `python manage.py algolia_clearindex`: clear the index
+- `python manage.py algolia_reindex`: reindex all the registered models. This command will first send all the record to a temporary index and then moves it.
+  - you can pass `--model` parameter to reindex a given model
+- `python manage.py algolia_applysettings`: (re)apply the index settings.
+- `python manage.py algolia_clearindex`: clear the index
 
 # Search
 
@@ -185,11 +186,7 @@ class ContactIndex(AlgoliaIndex):
 algoliasearch.register(Contact, ContactIndex)
 ```
 
-
-
 # Tags
-
-
 
 ## Tags
 
@@ -202,16 +199,12 @@ class ArticleIndex(AlgoliaIndex):
 
 At query time, specify `{ tagFilters: 'tagvalue' }` or `{ tagFilters: ['tagvalue1', 'tagvalue2'] }` as search parameters to restrict the result set to specific tags.
 
-
-
 # Options
-
-
 
 ## Custom `objectID`
 
 You can choose which field will be used as the `objectID `. The field should be unique and can
-    be a string or integer. By default, we use the `pk` field of the model.
+be a string or integer. By default, we use the `pk` field of the model.
 
 ```python
 class ArticleIndex(AlgoliaIndex):
@@ -269,8 +262,8 @@ class ContactIndex(AlgoliaIndex):
 
 - With this configuration, you can search for a `Contact` using its `Account` names
 - You can use the associated `account_ids` at search-time to fetch more data from your
-model (you should **only proxy the fields relevant for search** to keep your records' size
-as small as possible)
+  model (you should **only proxy the fields relevant for search** to keep your records' size
+  as small as possible)
 
 ## Index settings
 
@@ -413,9 +406,8 @@ models = [...]
 algoliasearch.register_aggregator(models, CustomAggregator)
 ```
 
+
 # Tests
-
-
 
 ## Run Tests
 
@@ -425,8 +417,8 @@ To run the tests, first find your Algolia application id and Admin API key (foun
 ALGOLIA_APPLICATION_ID={APPLICATION_ID} ALGOLIA_API_KEY={ADMIN_API_KEY} tox
 ```
 
-
 To override settings for some tests, use the [settings method](https://docs.djangoproject.com/en/1.11/topics/testing/tools/#django.test.SimpleTestCase.settings):
+
 ```python
 class OverrideSettingsTestCase(TestCase):
     def setUp(self):
@@ -444,15 +436,12 @@ class OverrideSettingsTestCase(TestCase):
         # ...
 ```
 
-
-
 # Troubleshooting
 
 # Use the Dockerfile
+
 If you want to contribute to this project without installing all its dependencies, you can use our Docker image. Please check our [dedicated guide](DOCKER_README.md) to learn more.
 
 ## Frequently asked questions
 
 Encountering an issue? Before reaching out to support, we recommend heading to our [FAQ](https://www.algolia.com/doc/framework-integration/django/faq/) where you will find answers for the most common issues and gotchas with the package.
-
-

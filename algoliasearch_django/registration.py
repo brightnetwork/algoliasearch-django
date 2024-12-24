@@ -1,15 +1,13 @@
 import logging
 
+from django import __version__ as __django__version__
 from django.db.models.signals import post_save
 from django.db.models.signals import pre_delete
-from algoliasearch.search_client import SearchClient, SearchConfig
+from algoliasearch.search.client import SearchClientSync
 
 from .models import AlgoliaIndex, Aggregator
 from .settings import SETTINGS
-from .version import VERSION
-from algoliasearch.version import VERSION as CLIENT_VERSION
-from platform import python_version
-from django import get_version as django_version
+from .version import VERSION as __version__
 
 logger = logging.getLogger(__name__)
 
@@ -27,22 +25,20 @@ class AlgoliaEngine:
         """Initializes the Algolia engine."""
 
         try:
-            app_id = settings['APPLICATION_ID']
-            api_key = settings['API_KEY']
+            app_id = settings["APPLICATION_ID"]
+            api_key = settings["API_KEY"]
         except KeyError:
-            raise AlgoliaEngineError(
-                'APPLICATION_ID and API_KEY must be defined.')
+            raise AlgoliaEngineError("APPLICATION_ID and API_KEY must be defined.")
 
-        self.__auto_indexing = settings.get('AUTO_INDEXING', True)
+        self.__auto_indexing = settings.get("AUTO_INDEXING", True)
         self.__settings = settings
 
         self.__registered_models = {}
         self.__registered_adapters = []
 
-        config = SearchConfig(app_id, api_key)
-        config.headers['User-Agent'] = 'Algolia for Python (%s); Python (%s); Algolia for Django (%s); Django (%s)' \
-                                       % (CLIENT_VERSION, python_version(), VERSION, django_version)
-        self.client = SearchClient.create_with_config(config)
+        self.client = SearchClientSync(app_id, api_key)
+        self.client.add_user_agent("Algolia for Django", __version__)
+        self.client.add_user_agent("Django", __django__version__)
 
     def is_registered(self, model):
         """Checks whether the given models is registered with Algolia engine"""
@@ -58,22 +54,23 @@ class AlgoliaEngine:
         # Check for existing registration.
         if self.is_registered(model):
             raise RegistrationError(
-                '{} is already registered with Algolia engine'.format(model))
+                "{} is already registered with Algolia engine".format(model)
+            )
 
         # Perform the registration.
         if not issubclass(index_cls, AlgoliaIndex):
             raise RegistrationError(
-                '{} should be a subclass of AlgoliaIndex'.format(index_cls))
+                "{} should be a subclass of AlgoliaIndex".format(index_cls)
+            )
         index_obj = index_cls(model, self.client, self.__settings)
         self.__registered_models[model] = index_obj
         self.__registered_adapters.append(index_obj)
 
-        if (isinstance(auto_indexing, bool) and
-                auto_indexing) or self.__auto_indexing:
+        if (isinstance(auto_indexing, bool) and auto_indexing) or self.__auto_indexing:
             # Connect to the signalling framework.
             post_save.connect(self.__post_save_receiver, model)
             pre_delete.connect(self.__pre_delete_receiver, model)
-            logger.info('REGISTER %s', model)
+            logger.info("REGISTER %s", model)
 
     def register_aggregator(self, models, index_cls=Aggregator, auto_indexing=None):
         for model in models:
@@ -108,14 +105,15 @@ class AlgoliaEngine:
         """
         if not self.is_registered(model):
             raise RegistrationError(
-                '{} is not registered with Algolia engine'.format(model))
+                "{} is not registered with Algolia engine".format(model)
+            )
         # Perform the unregistration.
         del self.__registered_models[model]
 
         # Disconnect from the signalling framework.
         post_save.disconnect(self.__post_save_receiver, model)
         pre_delete.disconnect(self.__pre_delete_receiver, model)
-        logger.info('UNREGISTER %s', model)
+        logger.info("UNREGISTER %s", model)
 
     def get_registered_models(self):
         """
@@ -135,7 +133,8 @@ class AlgoliaEngine:
         """Returns the adapter associated with the given model."""
         if not self.is_registered(model):
             raise RegistrationError(
-                '{} is not registered with Algolia engine'.format(model))
+                "{} is not registered with Algolia engine".format(model)
+            )
 
         return self.__registered_models[model]
 
@@ -179,13 +178,13 @@ class AlgoliaEngine:
         adapter = self.get_adapter(model)
         adapter.update_records(qs, batch_size=batch_size, **kwargs)
 
-    def raw_search(self, model, query='', request_options=None):
+    def raw_search(self, model, query="", params=None):
         """Performs a search query and returns the parsed JSON."""
-        if request_options is None:
-            request_options = {}
+        if params is None:
+            params = {}
 
         adapter = self.get_adapter(model)
-        return adapter.raw_search(query, request_options)
+        return adapter.raw_search(query, params)
 
     def clear_objects(self, model):
         """Clears the index."""
@@ -213,12 +212,12 @@ class AlgoliaEngine:
 
     def __post_save_receiver(self, instance, **kwargs):
         """Signal handler for when a registered model has been saved."""
-        logger.debug('RECEIVE post_save FOR %s', instance.__class__)
+        logger.debug("RECEIVE post_save FOR %s", instance.__class__)
         self.save_record(instance, **kwargs)
 
     def __pre_delete_receiver(self, instance, **kwargs):
         """Signal handler for when a registered model has been deleted."""
-        logger.debug('RECEIVE pre_delete FOR %s', instance.__class__)
+        logger.debug("RECEIVE pre_delete FOR %s", instance.__class__)
         self.delete_record(instance)
 
 
