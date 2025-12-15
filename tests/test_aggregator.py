@@ -38,7 +38,7 @@ class AggregatorTestCase(TestCase):
                 "_objectModel": "web.Job"
             }]
         }
-        self.algolia_client.init_index.return_value.search.return_value = mock_results
+        self.algolia_client.search_single_index.return_value.to_dict.return_value = mock_results
 
         index = Aggregator([Website], self.algolia_client, settings.ALGOLIA)
         results = index.raw_search('example')
