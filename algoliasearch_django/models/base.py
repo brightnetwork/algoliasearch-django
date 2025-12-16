@@ -12,6 +12,13 @@ from ..settings import DEBUG
 logger = logging.getLogger(__name__)
 
 
+def sanitize(hit):
+    """Remove _highlightResult from hit to prevent issues when saving rules."""
+    if "_highlightResult" in hit:
+        hit.pop("_highlightResult")
+    return hit
+
+
 class AlgoliaIndexError(Exception):
     """Something went wrong with an Algolia Index."""
 
@@ -330,10 +337,12 @@ class BaseAlgoliaIndex:
             rules = []
             synonyms = []
             self.__client.browse_rules(
-                self.index_name, lambda _resp: rules.extend(_resp.hits)
+                self.index_name,
+                lambda _resp: rules.extend([sanitize(_hit.to_dict()) for _hit in _resp.hits]),
             )
             self.__client.browse_synonyms(
-                self.index_name, lambda _resp: synonyms.extend(_resp.hits)
+                self.index_name,
+                lambda _resp: synonyms.extend([sanitize(_hit.to_dict()) for _hit in _resp.hits]),
             )
             if len(rules):
                 logger.debug('Got rules for index %s: %s', self.index_name, rules)
