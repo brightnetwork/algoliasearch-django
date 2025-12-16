@@ -22,8 +22,8 @@ except (IOError, ImportError):
 path_version = os.path.join(
     os.path.dirname(__file__), "algoliasearch_django/version.py"
 )
-if sys.version_info < (3, 8):
-    raise RuntimeError("algoliasearch_django 4.x requires Python 3.8+")
+if sys.version_info < (3, 10):
+    raise RuntimeError("algoliasearch_django 4.x requires Python 3.10+")
 else:
     exec(open(path_version).read())
 
@@ -58,8 +58,6 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
