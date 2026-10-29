@@ -4,7 +4,7 @@ name: Publish to PyPI
 on:
   push:
     tags:
-      - '*'
+      - '*.*.*'
 
 permissions: {}
 
@@ -15,6 +15,7 @@ jobs:
     environment: release
     permissions:
       contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
@@ -29,6 +30,3 @@ jobs:
           python setup.py sdist bdist_wheel
       - name: Publish
         uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }} # zizmor: ignore[use-trusted-publishing] PyPI trusted publisher not configured yet
